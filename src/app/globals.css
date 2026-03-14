@@ -1,26 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand-orange: #FF8C00;
+  --color-brand-magenta: #E91E8C;
+  --color-brand-purple: #6B21A8;
+  --color-brand-yellow: #FFB800;
+  --color-brand-dark: #1A0A2E;
+  --color-brand-light: #FFF5E6;
+  --color-brand-green: #22C55E;
+  --color-brand-red: #EF4444;
+  --font-display: 'Fredoka', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  color: #1A0A2E;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Custom gradient backgrounds */
+.bg-brand-gradient {
+  background: linear-gradient(135deg, #FF8C00 0%, #E91E8C 50%, #6B21A8 100%);
+}
+
+.bg-brand-gradient-vertical {
+  background: linear-gradient(180deg, #FF8C00 0%, #E91E8C 50%, #6B21A8 100%);
+}
+
+.bg-brand-gradient-soft {
+  background: linear-gradient(135deg, #FFF5E6 0%, #FFE0F0 50%, #E8D5F5 100%);
+}
+
+/* Glass effects */
+.bg-glass {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.bg-glass-dark {
+  background: rgba(26, 10, 46, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Text gradient */
+.text-gradient {
+  background: linear-gradient(135deg, #FF8C00, #E91E8C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card styles */
+.card-white {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(26, 10, 46, 0.15), 0 4px 12px rgba(26, 10, 46, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Shadows */
+.shadow-brand {
+  box-shadow: 0 8px 32px rgba(233, 30, 140, 0.2), 0 2px 8px rgba(255, 140, 0, 0.1);
+}
+
+.shadow-card {
+  box-shadow: 0 4px 24px rgba(26, 10, 46, 0.08), 0 1px 4px rgba(26, 10, 46, 0.04);
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 140, 0, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(233, 30, 140, 0.5); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-slide-up { animation: slide-up 0.6s ease-out both; }
+.animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+.animate-scale-in { animation: scale-in 0.4s ease-out forwards; }
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF8C00, #E91E8C);
+  border-radius: 3px;
+}
+
+/* Input autofill override */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #FFF5E6 inset !important;
+  -webkit-text-fill-color: #1A0A2E !important;
 }
