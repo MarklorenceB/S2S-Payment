@@ -63,13 +63,13 @@ export default function AdminOverviewPage() {
             fontFamily: "var(--font-display)",
             fontSize: "24px",
             fontWeight: 900,
-            color: "#fff",
+            color: "#1A0A2E",
             letterSpacing: "-0.02em",
           }}
         >
           Dashboard
         </h1>
-        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", marginTop: "4px" }}>
+        <p style={{ fontSize: "13px", color: "rgba(26,10,46,0.4)", marginTop: "4px" }}>
           Overview of your S2S system
         </p>
       </div>
@@ -82,10 +82,11 @@ export default function AdminOverviewPage() {
               key={stat.label}
               className="animate-slide-up"
               style={{
-                background: "rgba(255,255,255,0.06)",
+                background: "#fff",
                 borderRadius: "18px",
                 padding: "18px",
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid rgba(26,10,46,0.06)",
+                boxShadow: "0 2px 12px rgba(26,10,46,0.06), 0 1px 3px rgba(26,10,46,0.04)",
                 animationDelay: `${index * 0.1}s`,
               }}
             >
@@ -102,7 +103,7 @@ export default function AdminOverviewPage() {
                     style={{
                       fontSize: "11px",
                       fontWeight: 600,
-                      color: "rgba(255,255,255,0.4)",
+                      color: "rgba(26,10,46,0.4)",
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
                     }}
@@ -114,7 +115,7 @@ export default function AdminOverviewPage() {
                       fontFamily: "var(--font-display)",
                       fontSize: "32px",
                       fontWeight: 900,
-                      color: "#fff",
+                      color: "#1A0A2E",
                       marginTop: "6px",
                       lineHeight: 1,
                     }}

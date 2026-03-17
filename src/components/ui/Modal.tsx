@@ -27,7 +27,7 @@ export default function Modal({ open, onClose, title, children, className }: Mod
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ padding: "0px 20px" }}>
       <div
         className="absolute inset-0 bg-brand-dark/60 backdrop-blur-sm animate-fade-in"
         onClick={onClose}
@@ -39,19 +39,42 @@ export default function Modal({ open, onClose, title, children, className }: Mod
         )}
       >
         {title && (
-          <div className="flex items-center justify-between px-6 pt-6 pb-2">
-            <h3 className="text-xl font-bold text-brand-dark font-[family-name:var(--font-display)]">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "24px 24px 8px",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "20px",
+                fontWeight: 800,
+                color: "#1A0A2E",
+                fontFamily: "var(--font-display)",
+              }}
+            >
               {title}
             </h3>
             <button
               onClick={onClose}
-              className="p-2 rounded-full hover:bg-brand-dark/5 transition-colors"
+              style={{
+                padding: "8px",
+                borderRadius: "50%",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              <X className="w-5 h-5 text-brand-dark/50" />
+              <X style={{ width: "20px", height: "20px", color: "rgba(26,10,46,0.5)" }} />
             </button>
           </div>
         )}
-        <div className="p-6 pt-2">{children}</div>
+        <div style={{ padding: "8px 34px 24px" }}>{children}</div>
       </div>
     </div>
   );

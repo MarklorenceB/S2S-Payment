@@ -91,13 +91,13 @@ export default function AdminIssuesPage() {
             fontFamily: "var(--font-display)",
             fontSize: "24px",
             fontWeight: 900,
-            color: "#fff",
+            color: "#1A0A2E",
             letterSpacing: "-0.02em",
           }}
         >
           Issue Reports
         </h1>
-        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", marginTop: "4px" }}>
+        <p style={{ fontSize: "13px", color: "rgba(26,10,46,0.4)", marginTop: "4px" }}>
           {issues.length} total reports
         </p>
       </div>
@@ -112,7 +112,7 @@ export default function AdminIssuesPage() {
           marginBottom: "16px",
         }}
       >
-        <Filter style={{ width: "16px", height: "16px", color: "rgba(255,255,255,0.3)" }} />
+        <Filter style={{ width: "16px", height: "16px", color: "rgba(26,10,46,0.3)" }} />
         {filterOptions.map((opt) => (
           <button
             key={opt.value}
@@ -133,8 +133,8 @@ export default function AdminIssuesPage() {
                     boxShadow: "0 4px 12px rgba(233,30,140,0.2)",
                   }
                 : {
-                    background: "rgba(255,255,255,0.06)",
-                    color: "rgba(255,255,255,0.4)",
+                    background: "rgba(26,10,46,0.06)",
+                    color: "rgba(26,10,46,0.4)",
                   }),
             }}
           >
@@ -150,7 +150,7 @@ export default function AdminIssuesPage() {
             <div
               key={i}
               className="animate-pulse"
-              style={{ height: "100px", borderRadius: "16px", background: "rgba(255,255,255,0.04)" }}
+              style={{ height: "100px", borderRadius: "16px", background: "rgba(255,255,255,0.6)" }}
             />
           ))}
         </div>
@@ -165,10 +165,11 @@ export default function AdminIssuesPage() {
                 key={issue.id}
                 className="animate-slide-up"
                 style={{
-                  background: "rgba(255,255,255,0.06)",
+                  background: "#fff",
                   borderRadius: "16px",
                   padding: "16px",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(26,10,46,0.06)",
+                  boxShadow: "0 2px 12px rgba(26,10,46,0.06), 0 1px 3px rgba(26,10,46,0.04)",
                   animationDelay: `${index * 0.05}s`,
                 }}
               >
@@ -197,22 +198,22 @@ export default function AdminIssuesPage() {
                     }}
                   >
                     {issue.modem_status === "online" ? (
-                      <Wifi style={{ width: "16px", height: "16px", color: "#34D399" }} />
+                      <Wifi style={{ width: "16px", height: "16px", color: "#16A34A" }} />
                     ) : (
-                      <WifiOff style={{ width: "16px", height: "16px", color: "#F87171" }} />
+                      <WifiOff style={{ width: "16px", height: "16px", color: "#DC2626" }} />
                     )}
                   </div>
                   <Badge variant={config.badge}>{config.label}</Badge>
-                  <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.25)", marginLeft: "auto" }}>
+                  <span style={{ fontSize: "11px", color: "rgba(26,10,46,0.25)", marginLeft: "auto" }}>
                     {formatDate(issue.created_at)}
                   </span>
                 </div>
 
                 {/* User + description */}
-                <p style={{ fontWeight: 700, fontSize: "15px", color: "#fff" }}>
+                <p style={{ fontWeight: 700, fontSize: "15px", color: "#1A0A2E" }}>
                   {profile?.full_name || "Unknown User"}
                 </p>
-                <p style={{ fontSize: "13px", marginTop: "6px", color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
+                <p style={{ fontSize: "13px", marginTop: "6px", color: "rgba(26,10,46,0.5)", lineHeight: 1.5 }}>
                   {issue.description}
                 </p>
 
@@ -223,10 +224,10 @@ export default function AdminIssuesPage() {
                       marginTop: "10px",
                       padding: "10px 12px",
                       borderRadius: "10px",
-                      background: "rgba(255,255,255,0.04)",
+                      background: "rgba(26,10,46,0.04)",
                     }}
                   >
-                    <p style={{ fontSize: "12px", fontStyle: "italic", color: "rgba(255,255,255,0.4)" }}>
+                    <p style={{ fontSize: "12px", fontStyle: "italic", color: "rgba(26,10,46,0.5)" }}>
                       Note: {issue.admin_notes}
                     </p>
                   </div>
@@ -239,8 +240,8 @@ export default function AdminIssuesPage() {
                     variant="ghost"
                     onClick={() => openNoteModal(issue)}
                     style={{
-                      color: "rgba(255,255,255,0.5)",
-                      background: "rgba(255,255,255,0.06)",
+                      color: "rgba(26,10,46,0.5)",
+                      background: "rgba(26,10,46,0.06)",
                       borderRadius: "10px",
                       padding: "8px 14px",
                       fontSize: "13px",
@@ -256,7 +257,7 @@ export default function AdminIssuesPage() {
 
           {filtered.length === 0 && (
             <div style={{ textAlign: "center", padding: "48px 0" }}>
-              <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.3)" }}>No issues found</p>
+              <p style={{ fontSize: "15px", color: "rgba(26,10,46,0.3)" }}>No issues found</p>
             </div>
           )}
         </div>

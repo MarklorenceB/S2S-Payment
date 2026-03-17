@@ -9,7 +9,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "#0F0620",
+        background: "linear-gradient(160deg, #FFF5E6 0%, #FFE0F0 50%, #E8D5F5 100%)",
       }}
     >
       <AdminSidebar />

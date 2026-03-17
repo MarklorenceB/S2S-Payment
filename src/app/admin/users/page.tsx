@@ -41,13 +41,13 @@ export default function AdminUsersPage() {
             fontFamily: "var(--font-display)",
             fontSize: "24px",
             fontWeight: 900,
-            color: "#fff",
+            color: "#1A0A2E",
             letterSpacing: "-0.02em",
           }}
         >
           Users
         </h1>
-        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", marginTop: "4px" }}>
+        <p style={{ fontSize: "13px", color: "rgba(26,10,46,0.4)", marginTop: "4px" }}>
           {users.length} registered users
         </p>
       </div>
@@ -62,7 +62,7 @@ export default function AdminUsersPage() {
             transform: "translateY(-50%)",
             width: "18px",
             height: "18px",
-            color: "rgba(255,255,255,0.3)",
+            color: "rgba(26,10,46,0.3)",
           }}
         />
         <input
@@ -74,9 +74,9 @@ export default function AdminUsersPage() {
             width: "100%",
             padding: "14px 16px 14px 44px",
             borderRadius: "14px",
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            color: "#fff",
+            background: "#fff",
+            border: "2px solid rgba(26,10,46,0.1)",
+            color: "#1A0A2E",
             fontSize: "14px",
             outline: "none",
             transition: "all 0.2s",
@@ -87,7 +87,7 @@ export default function AdminUsersPage() {
             e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,30,140,0.2)";
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+            e.currentTarget.style.borderColor = "rgba(26,10,46,0.1)";
             e.currentTarget.style.boxShadow = "none";
           }}
         />
@@ -103,7 +103,7 @@ export default function AdminUsersPage() {
               style={{
                 height: "100px",
                 borderRadius: "16px",
-                background: "rgba(255,255,255,0.04)",
+                background: "rgba(255,255,255,0.6)",
               }}
             />
           ))}
@@ -115,10 +115,11 @@ export default function AdminUsersPage() {
               key={user.id}
               className="animate-slide-up"
               style={{
-                background: "rgba(255,255,255,0.06)",
+                background: "#fff",
                 borderRadius: "16px",
                 padding: "16px",
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid rgba(26,10,46,0.06)",
+                boxShadow: "0 2px 12px rgba(26,10,46,0.06), 0 1px 3px rgba(26,10,46,0.04)",
                 animationDelay: `${index * 0.05}s`,
               }}
             >
@@ -142,7 +143,7 @@ export default function AdminUsersPage() {
                     style={{
                       fontWeight: 700,
                       fontSize: "16px",
-                      color: "#fff",
+                      color: "#1A0A2E",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
@@ -153,18 +154,18 @@ export default function AdminUsersPage() {
                   <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginTop: "6px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                       <Hash style={{ width: "13px", height: "13px", color: "#FF8C00", flexShrink: 0 }} />
-                      <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)" }}>{user.account_number}</span>
+                      <span style={{ fontSize: "13px", color: "rgba(26,10,46,0.5)" }}>{user.account_number}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                       <Phone style={{ width: "13px", height: "13px", color: "#E91E8C", flexShrink: 0 }} />
-                      <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)" }}>{user.contact_number}</span>
+                      <span style={{ fontSize: "13px", color: "rgba(26,10,46,0.5)" }}>{user.contact_number}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                       <Mail style={{ width: "13px", height: "13px", color: "#8B5CF6", flexShrink: 0 }} />
                       <span
                         style={{
                           fontSize: "13px",
-                          color: "rgba(255,255,255,0.5)",
+                          color: "rgba(26,10,46,0.5)",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
@@ -181,7 +182,7 @@ export default function AdminUsersPage() {
 
           {filtered.length === 0 && (
             <div style={{ textAlign: "center", padding: "48px 0" }}>
-              <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.3)" }}>No users found</p>
+              <p style={{ fontSize: "15px", color: "rgba(26,10,46,0.3)" }}>No users found</p>
             </div>
           )}
         </div>
