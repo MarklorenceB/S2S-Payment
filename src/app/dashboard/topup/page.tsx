@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Hash, Phone, Upload, ImageIcon, CheckCircle2, Clock, XCircle } from "lucide-react";
+import { Hash, Phone, Upload, ImageIcon, CheckCircle2, Clock, XCircle, Receipt } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils";
 import type { TopupRequest } from "@/types";
@@ -14,6 +14,7 @@ export default function TopupPage() {
   const [topups, setTopups] = useState<TopupRequest[]>([]);
   const [accountNumber, setAccountNumber] = useState("");
   const [contactNumber, setContactNumber] = useState("");
+  const [gcashReference, setGcashReference] = useState("");
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -92,12 +93,20 @@ export default function TopupPage() {
         .from("payment-screenshots")
         .getPublicUrl(fileName);
 
+      // Get user's full name for Google Sheets
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single();
+
       const { data: topup, error: insertError } = await supabase
         .from("topup_requests")
         .insert({
           user_id: user.id,
           account_number: accountNumber,
           contact_number: contactNumber,
+          gcash_reference: gcashReference,
           screenshot_url: urlData.publicUrl,
           status: "pending",
         })
@@ -112,11 +121,31 @@ export default function TopupPage() {
 
       if (topup) {
         setTopups((prev) => [topup, ...prev]);
+
+        // Sync to Google Sheets
+        fetch("/api/sheets/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "append",
+            id: topup.id,
+            full_name: profileData?.full_name || "Unknown",
+            account_number: accountNumber,
+            contact_number: contactNumber,
+            gcash_reference: gcashReference,
+            screenshot_url: urlData.publicUrl,
+            created_at: topup.created_at,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log("Sheets sync result:", data))
+          .catch((err) => console.error("Sheets sync error:", err));
       }
 
       setSuccess(true);
       setScreenshot(null);
       setPreview(null);
+      setGcashReference("");
       if (fileRef.current) fileRef.current.value = "";
 
       setTimeout(() => setSuccess(false), 3000);
@@ -197,6 +226,15 @@ export default function TopupPage() {
               value={contactNumber}
               onChange={(e) => setContactNumber(e.target.value)}
               icon={<Phone style={{ width: "20px", height: "20px" }} />}
+              required
+            />
+
+            <Input
+              label="GCash Reference #"
+              placeholder="Enter GCash reference number"
+              value={gcashReference}
+              onChange={(e) => setGcashReference(e.target.value)}
+              icon={<Receipt style={{ width: "20px", height: "20px" }} />}
               required
             />
 

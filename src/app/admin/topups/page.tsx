@@ -45,6 +45,19 @@ export default function AdminTopupsPage() {
       setTopups((prev) =>
         prev.map((t) => (t.id === id ? { ...t, status } : t))
       );
+
+      // Sync status update to Google Sheets (fire and forget)
+      fetch("/api/sheets/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "update_status",
+          id,
+          status,
+        }),
+      }).catch(() => {
+        // Silent fail — Supabase is the source of truth
+      });
     }
     setUpdatingId(null);
   };
@@ -192,6 +205,11 @@ export default function AdminTopupsPage() {
                 <p style={{ fontSize: "12px", marginTop: "4px", color: "rgba(26,10,46,0.4)" }}>
                   Acct: {topup.account_number} &bull; Tel: {topup.contact_number}
                 </p>
+                {topup.gcash_reference && (
+                  <p style={{ fontSize: "12px", marginTop: "2px", color: "rgba(26,10,46,0.5)", fontWeight: 600 }}>
+                    GCash Ref: {topup.gcash_reference}
+                  </p>
+                )}
 
                 {/* Actions */}
                 {topup.status === "pending" && (

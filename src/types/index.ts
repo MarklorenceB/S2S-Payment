@@ -14,6 +14,7 @@ export interface TopupRequest {
   user_id: string;
   account_number: string;
   contact_number: string;
+  gcash_reference: string | null;
   screenshot_url: string;
   amount: number | null;
   status: "pending" | "approved" | "rejected";
