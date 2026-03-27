@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Hash, Phone, Upload, ImageIcon, CheckCircle2, Clock, XCircle, Receipt } from "lucide-react";
+import { Hash, Phone, Upload, ImageIcon, CheckCircle2, Clock, XCircle, Receipt, Copy, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils";
 import type { TopupRequest } from "@/types";
@@ -22,7 +22,14 @@ export default function TopupPage() {
   const [error, setError] = useState("");
   const [viewImage, setViewImage] = useState<string | null>(null);
   const [showGcash, setShowGcash] = useState(false);
+  const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const copyNumber = (number: string) => {
+    navigator.clipboard.writeText(number);
+    setCopiedNumber(number);
+    setTimeout(() => setCopiedNumber(null), 2000);
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -507,9 +514,35 @@ export default function TopupPage() {
             <p style={{ fontSize: "11px", opacity: 0.8, marginBottom: "4px", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>
               Account 1
             </p>
-            <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "22px", letterSpacing: "1.5px" }}>
-              0915 164 7084
-            </p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
+              <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "18px", letterSpacing: "1px" }}>
+                0915 164 7084
+              </p>
+              <button
+                onClick={() => copyNumber("09151647084")}
+                style={{
+                  background: copiedNumber === "09151647084" ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.2)",
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "8px 12px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  color: "#fff",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  transition: "background 0.2s",
+                  flexShrink: 0,
+                }}
+              >
+                {copiedNumber === "09151647084" ? (
+                  <><Check style={{ width: "14px", height: "14px" }} /> Copied!</>
+                ) : (
+                  <><Copy style={{ width: "14px", height: "14px" }} /> Copy</>
+                )}
+              </button>
+            </div>
             <p style={{ fontSize: "14px", fontWeight: 600, opacity: 0.9, marginTop: "2px" }}>
               Jennifer S.
             </p>
@@ -527,9 +560,35 @@ export default function TopupPage() {
             <p style={{ fontSize: "11px", opacity: 0.8, marginBottom: "4px", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>
               Account 2
             </p>
-            <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "22px", letterSpacing: "1.5px" }}>
-              0975 798 4862
-            </p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
+              <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "18px", letterSpacing: "1px" }}>
+                0975 798 4862
+              </p>
+              <button
+                onClick={() => copyNumber("09757984862")}
+                style={{
+                  background: copiedNumber === "09757984862" ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.2)",
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "8px 12px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  color: "#fff",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  transition: "background 0.2s",
+                  flexShrink: 0,
+                }}
+              >
+                {copiedNumber === "09757984862" ? (
+                  <><Check style={{ width: "14px", height: "14px" }} /> Copied!</>
+                ) : (
+                  <><Copy style={{ width: "14px", height: "14px" }} /> Copy</>
+                )}
+              </button>
+            </div>
             <p style={{ fontSize: "14px", fontWeight: 600, opacity: 0.9, marginTop: "2px" }}>
               Francisco M.
             </p>
