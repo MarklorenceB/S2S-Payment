@@ -21,6 +21,7 @@ export default function TopupPage() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [viewImage, setViewImage] = useState<string | null>(null);
+  const [showGcash, setShowGcash] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -196,6 +197,60 @@ export default function TopupPage() {
           </p>
         </div>
       )}
+
+      {/* GCash Info Button */}
+      <button
+        onClick={() => setShowGcash(true)}
+        style={{
+          width: "100%",
+          background: "linear-gradient(135deg, #007DFE 0%, #0060C0 100%)",
+          borderRadius: "16px",
+          padding: "14px 18px",
+          marginBottom: "16px",
+          color: "#fff",
+          border: "none",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          boxShadow: "0 4px 16px rgba(0,125,254,0.25)",
+          transition: "transform 0.2s, box-shadow 0.2s",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.01)";
+          e.currentTarget.style.boxShadow = "0 6px 24px rgba(0,125,254,0.35)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,125,254,0.25)";
+        }}
+      >
+        <div
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "12px",
+            background: "rgba(255,255,255,0.2)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: 800,
+            fontSize: "18px",
+            flexShrink: 0,
+          }}
+        >
+          G
+        </div>
+        <div style={{ textAlign: "left", flex: 1 }}>
+          <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "15px" }}>
+            View GCash Numbers
+          </p>
+          <p style={{ fontSize: "12px", opacity: 0.8 }}>
+            Tap to see where to send your payment
+          </p>
+        </div>
+        <span style={{ fontSize: "20px", opacity: 0.8 }}>›</span>
+      </button>
 
       {/* Form card */}
       <div
@@ -435,6 +490,82 @@ export default function TopupPage() {
             className="w-full rounded-xl"
           />
         )}
+      </Modal>
+
+      {/* GCash Numbers Modal */}
+      <Modal open={showGcash} onClose={() => setShowGcash(false)} title="GCash Payment">
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {/* Account 1 */}
+          <div
+            style={{
+              background: "linear-gradient(135deg, #007DFE 0%, #0060C0 100%)",
+              borderRadius: "16px",
+              padding: "16px 18px",
+              color: "#fff",
+            }}
+          >
+            <p style={{ fontSize: "11px", opacity: 0.8, marginBottom: "4px", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>
+              Account 1
+            </p>
+            <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "22px", letterSpacing: "1.5px" }}>
+              0915 164 7084
+            </p>
+            <p style={{ fontSize: "14px", fontWeight: 600, opacity: 0.9, marginTop: "2px" }}>
+              Jennifer S.
+            </p>
+          </div>
+
+          {/* Account 2 */}
+          <div
+            style={{
+              background: "linear-gradient(135deg, #007DFE 0%, #0060C0 100%)",
+              borderRadius: "16px",
+              padding: "16px 18px",
+              color: "#fff",
+            }}
+          >
+            <p style={{ fontSize: "11px", opacity: 0.8, marginBottom: "4px", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>
+              Account 2
+            </p>
+            <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "22px", letterSpacing: "1.5px" }}>
+              0975 798 4862
+            </p>
+            <p style={{ fontSize: "14px", fontWeight: 600, opacity: 0.9, marginTop: "2px" }}>
+              Francisco M.
+            </p>
+          </div>
+
+          {/* Instructions */}
+          <div
+            style={{
+              background: "#F0F7FF",
+              borderRadius: "14px",
+              padding: "14px 16px",
+              border: "1px solid #BFDBFE",
+            }}
+          >
+            <p style={{ fontSize: "13px", fontWeight: 700, color: "#1E40AF", marginBottom: "8px" }}>
+              How to send:
+            </p>
+            <ol style={{ fontSize: "13px", color: "#1E40AF", lineHeight: "1.8", margin: 0, paddingLeft: "18px" }}>
+              <li>Open <strong>GCash</strong> app</li>
+              <li>Tap <strong>Send Money</strong></li>
+              <li>Enter one of the numbers above</li>
+              <li>Send your desired amount</li>
+              <li>Take a <strong>screenshot</strong> of the receipt</li>
+              <li>Fill out the form with your <strong>reference #</strong></li>
+            </ol>
+          </div>
+
+          <Button
+            variant="primary"
+            className="w-full"
+            onClick={() => setShowGcash(false)}
+            style={{ marginTop: "4px" }}
+          >
+            Got it!
+          </Button>
+        </div>
       </Modal>
     </div>
   );
