@@ -1,13 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { User, Hash, Phone, Mail, Calendar } from "lucide-react";
+import { User, Hash, Phone, Mail, Calendar, Copy, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils";
 import type { Profile } from "@/types";
+import Modal from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
 
 export default function InfoPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [showGcash, setShowGcash] = useState(false);
+  const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
+
+  const copyNumber = (number: string) => {
+    navigator.clipboard.writeText(number);
+    setCopiedNumber(number);
+    setTimeout(() => setCopiedNumber(null), 2000);
+  };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -139,6 +149,187 @@ export default function InfoPage() {
           );
         })}
       </div>
+
+      {/* GCash Numbers Button */}
+      <button
+        onClick={() => setShowGcash(true)}
+        className="animate-slide-up"
+        style={{
+          width: "100%",
+          background: "linear-gradient(135deg, #007DFE 0%, #0060C0 100%)",
+          borderRadius: "16px",
+          padding: "14px 18px",
+          marginTop: "16px",
+          color: "#fff",
+          border: "none",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          boxShadow: "0 4px 16px rgba(0,125,254,0.25)",
+          transition: "transform 0.2s, box-shadow 0.2s",
+          animationDelay: "0.4s",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.01)";
+          e.currentTarget.style.boxShadow = "0 6px 24px rgba(0,125,254,0.35)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,125,254,0.25)";
+        }}
+      >
+        <div
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "12px",
+            background: "rgba(255,255,255,0.2)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: 800,
+            fontSize: "18px",
+            flexShrink: 0,
+          }}
+        >
+          G
+        </div>
+        <div style={{ textAlign: "left", flex: 1 }}>
+          <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "15px" }}>
+            View GCash Numbers
+          </p>
+          <p style={{ fontSize: "12px", opacity: 0.8 }}>
+            Tap to see where to send your payment
+          </p>
+        </div>
+        <span style={{ fontSize: "20px", opacity: 0.8 }}>›</span>
+      </button>
+
+      {/* GCash Numbers Modal */}
+      <Modal open={showGcash} onClose={() => setShowGcash(false)} title="GCash Payment">
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div
+            style={{
+              background: "linear-gradient(135deg, #007DFE 0%, #0060C0 100%)",
+              borderRadius: "16px",
+              padding: "16px 18px",
+              color: "#fff",
+            }}
+          >
+            <p style={{ fontSize: "11px", opacity: 0.8, marginBottom: "4px", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>
+              Account 1
+            </p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
+              <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "18px", letterSpacing: "1px" }}>
+                0915 164 7084
+              </p>
+              <button
+                onClick={() => copyNumber("09151647084")}
+                style={{
+                  background: copiedNumber === "09151647084" ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.2)",
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "8px 12px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  color: "#fff",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  transition: "background 0.2s",
+                  flexShrink: 0,
+                }}
+              >
+                {copiedNumber === "09151647084" ? (
+                  <><Check style={{ width: "14px", height: "14px" }} /> Copied!</>
+                ) : (
+                  <><Copy style={{ width: "14px", height: "14px" }} /> Copy</>
+                )}
+              </button>
+            </div>
+            <p style={{ fontSize: "14px", fontWeight: 600, opacity: 0.9, marginTop: "2px" }}>
+              Jennifer S.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: "linear-gradient(135deg, #007DFE 0%, #0060C0 100%)",
+              borderRadius: "16px",
+              padding: "16px 18px",
+              color: "#fff",
+            }}
+          >
+            <p style={{ fontSize: "11px", opacity: 0.8, marginBottom: "4px", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>
+              Account 2
+            </p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
+              <p style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "18px", letterSpacing: "1px" }}>
+                0975 798 4862
+              </p>
+              <button
+                onClick={() => copyNumber("09757984862")}
+                style={{
+                  background: copiedNumber === "09757984862" ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.2)",
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "8px 12px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  color: "#fff",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  transition: "background 0.2s",
+                  flexShrink: 0,
+                }}
+              >
+                {copiedNumber === "09757984862" ? (
+                  <><Check style={{ width: "14px", height: "14px" }} /> Copied!</>
+                ) : (
+                  <><Copy style={{ width: "14px", height: "14px" }} /> Copy</>
+                )}
+              </button>
+            </div>
+            <p style={{ fontSize: "14px", fontWeight: 600, opacity: 0.9, marginTop: "2px" }}>
+              Francisco M.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: "#F0F7FF",
+              borderRadius: "14px",
+              padding: "14px 16px",
+              border: "1px solid #BFDBFE",
+            }}
+          >
+            <p style={{ fontSize: "13px", fontWeight: 700, color: "#1E40AF", marginBottom: "8px" }}>
+              How to send:
+            </p>
+            <ol style={{ fontSize: "13px", color: "#1E40AF", lineHeight: "1.8", margin: 0, paddingLeft: "18px" }}>
+              <li>Open <strong>GCash</strong> app</li>
+              <li>Tap <strong>Send Money</strong></li>
+              <li>Enter one of the numbers above</li>
+              <li>Send your desired amount</li>
+              <li>Take a <strong>screenshot</strong> of the receipt</li>
+              <li>Go to <strong>Top Up</strong> tab and submit the form</li>
+            </ol>
+          </div>
+
+          <Button
+            variant="primary"
+            className="w-full"
+            onClick={() => setShowGcash(false)}
+            style={{ marginTop: "4px" }}
+          >
+            Got it!
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }
