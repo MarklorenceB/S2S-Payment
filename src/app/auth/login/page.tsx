@@ -46,6 +46,13 @@ export default function LoginPage() {
           .single();
 
         if (profile?.role === "admin") {
+          // Generate unique session token and save to DB + localStorage
+          const token = crypto.randomUUID();
+          await supabase
+            .from("profiles")
+            .update({ session_token: token })
+            .eq("id", user.id);
+          localStorage.setItem("admin_session_token", token);
           router.push("/admin");
         } else {
           router.push("/dashboard");

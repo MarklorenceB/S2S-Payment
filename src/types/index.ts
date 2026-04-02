@@ -5,6 +5,7 @@ export interface Profile {
   contact_number: string;
   email: string | null;
   role: "user" | "admin";
+  session_token: string | null;
   created_at: string;
   updated_at: string;
 }
