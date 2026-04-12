@@ -185,16 +185,34 @@ export default function AdminTopupsPage() {
                   </div>
                   <button
                     onClick={() => setViewImage(topup.screenshot_url)}
+                    className="cursor-pointer"
                     style={{
-                      padding: "8px",
+                      padding: "0",
                       borderRadius: "10px",
                       background: "rgba(26,10,46,0.06)",
-                      border: "none",
+                      border: "2px solid rgba(26,10,46,0.08)",
                       cursor: "pointer",
                       flexShrink: 0,
+                      width: "48px",
+                      height: "48px",
+                      overflow: "hidden",
+                      position: "relative",
                     }}
                   >
-                    <ImageIcon style={{ width: "16px", height: "16px", color: "rgba(26,10,46,0.5)" }} />
+                    {topup.screenshot_url ? (
+                      <img
+                        src={topup.screenshot_url}
+                        alt="GCash screenshot"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                    ) : (
+                      <ImageIcon style={{ width: "16px", height: "16px", color: "rgba(26,10,46,0.5)", margin: "auto" }} />
+                    )}
                   </button>
                 </div>
 
