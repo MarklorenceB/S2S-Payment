@@ -40,6 +40,11 @@ export default function ReportPage() {
       return;
     }
 
+    if (description.length > 500) {
+      setError("Description must be under 500 characters.");
+      return;
+    }
+
     setError("");
     setLoading(true);
 
@@ -273,9 +278,10 @@ export default function ReportPage() {
               </label>
               <textarea
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => setDescription(e.target.value.slice(0, 500))}
                 placeholder="Describe your internet issue..."
                 rows={4}
+                maxLength={500}
                 required
                 style={{
                   width: "100%",
@@ -300,6 +306,9 @@ export default function ReportPage() {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               />
+              <p style={{ fontSize: "11px", color: "rgba(26,10,46,0.3)", textAlign: "right", marginTop: "4px" }}>
+                {description.length}/500
+              </p>
             </div>
 
             {error && (

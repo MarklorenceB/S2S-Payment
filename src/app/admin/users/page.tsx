@@ -1,15 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, User, Hash, Phone, Mail } from "lucide-react";
+import { Search, User, Hash, Phone, Mail, KeyRound, Copy, Check, Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils";
 import type { Profile } from "@/types";
+import Modal from "@/components/ui/Modal";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<Profile[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [resetModal, setResetModal] = useState(false);
+  const [resetUser, setResetUser] = useState<Profile | null>(null);
+  const [resetting, setResetting] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [resetError, setResetError] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -25,6 +33,53 @@ export default function AdminUsersPage() {
     };
     fetchUsers();
   }, []);
+
+  const handleResetPassword = async (user: Profile) => {
+    setResetUser(user);
+    setNewPassword("");
+    setResetError("");
+    setCopied(false);
+    setShowPassword(false);
+    setResetModal(true);
+  };
+
+  const confirmReset = async () => {
+    if (!resetUser) return;
+    setResetting(true);
+    setResetError("");
+
+    try {
+      const res = await fetch("/api/admin/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: resetUser.id }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setResetError(data.error || "Failed to reset password.");
+        return;
+      }
+
+      setNewPassword(data.newPassword);
+    } catch {
+      setResetError("Something went wrong.");
+    } finally {
+      setResetting(false);
+    }
+  };
+
+  const copyPassword = async () => {
+    if (!newPassword) return;
+    try {
+      await navigator.clipboard.writeText(newPassword);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+    }
+  };
 
   const filtered = users.filter(
     (u) =>
@@ -177,6 +232,31 @@ export default function AdminUsersPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Reset Password Button */}
+              <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px solid rgba(26,10,46,0.06)" }}>
+                <button
+                  onClick={() => handleResetPassword(user)}
+                  className="cursor-pointer"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: "8px 14px",
+                    borderRadius: "10px",
+                    border: "1px solid rgba(26,10,46,0.1)",
+                    background: "rgba(139,92,246,0.06)",
+                    color: "#7C3AED",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <KeyRound style={{ width: "14px", height: "14px" }} />
+                  Reset Password
+                </button>
+              </div>
             </div>
           ))}
 
@@ -187,6 +267,160 @@ export default function AdminUsersPage() {
           )}
         </div>
       )}
+
+      {/* Reset Password Modal */}
+      <Modal
+        open={resetModal}
+        onClose={() => {
+          setResetModal(false);
+          setNewPassword("");
+          setResetError("");
+        }}
+        title="Reset Password"
+      >
+        {resetUser && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div
+              style={{
+                padding: "14px",
+                borderRadius: "14px",
+                background: "rgba(139,92,246,0.06)",
+                border: "1px solid rgba(139,92,246,0.1)",
+              }}
+            >
+              <p style={{ fontSize: "13px", color: "rgba(26,10,46,0.5)", marginBottom: "4px" }}>
+                Resetting password for
+              </p>
+              <p style={{ fontSize: "16px", fontWeight: 700, color: "#1A0A2E" }}>
+                {resetUser.full_name}
+              </p>
+              <p style={{ fontSize: "13px", color: "rgba(26,10,46,0.4)", marginTop: "2px" }}>
+                Account: {resetUser.account_number}
+              </p>
+            </div>
+
+            {!newPassword && !resetError && (
+              <>
+                <p style={{ fontSize: "13px", color: "rgba(26,10,46,0.5)", lineHeight: 1.6 }}>
+                  This will generate a new random password for this user. Their current password will stop working immediately.
+                </p>
+                <button
+                  onClick={confirmReset}
+                  disabled={resetting}
+                  className="cursor-pointer"
+                  style={{
+                    width: "100%",
+                    padding: "14px 24px",
+                    borderRadius: "14px",
+                    background: resetting
+                      ? "rgba(139,92,246,0.5)"
+                      : "linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%)",
+                    color: "#fff",
+                    fontSize: "15px",
+                    fontWeight: 700,
+                    fontFamily: "var(--font-display)",
+                    border: "none",
+                    cursor: resetting ? "not-allowed" : "pointer",
+                    boxShadow: "0 8px 32px rgba(124,58,237,0.2)",
+                  }}
+                >
+                  {resetting ? "Generating..." : "Generate New Password"}
+                </button>
+              </>
+            )}
+
+            {resetError && (
+              <div
+                style={{
+                  padding: "12px 14px",
+                  borderRadius: "12px",
+                  background: "#FEF2F2",
+                  color: "#EF4444",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  border: "1px solid #FECACA",
+                }}
+              >
+                {resetError}
+              </div>
+            )}
+
+            {newPassword && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div
+                  style={{
+                    padding: "14px",
+                    borderRadius: "14px",
+                    background: "#F0FDF4",
+                    border: "1px solid #BBF7D0",
+                  }}
+                >
+                  <p style={{ fontSize: "12px", fontWeight: 600, color: "#16A34A", marginBottom: "8px" }}>
+                    NEW PASSWORD
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <code
+                      style={{
+                        flex: 1,
+                        fontSize: "20px",
+                        fontWeight: 700,
+                        color: "#1A0A2E",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      {showPassword ? newPassword : "••••••••"}
+                    </code>
+                    <button
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="cursor-pointer"
+                      style={{
+                        padding: "8px",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(26,10,46,0.1)",
+                        background: "#fff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {showPassword ? (
+                        <EyeOff style={{ width: "16px", height: "16px", color: "rgba(26,10,46,0.4)" }} />
+                      ) : (
+                        <Eye style={{ width: "16px", height: "16px", color: "rgba(26,10,46,0.4)" }} />
+                      )}
+                    </button>
+                    <button
+                      onClick={copyPassword}
+                      className="cursor-pointer"
+                      style={{
+                        padding: "8px",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(26,10,46,0.1)",
+                        background: copied ? "#16A34A" : "#fff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        transition: "all 0.2s",
+                      }}
+                    >
+                      {copied ? (
+                        <Check style={{ width: "16px", height: "16px", color: "#fff" }} />
+                      ) : (
+                        <Copy style={{ width: "16px", height: "16px", color: "rgba(26,10,46,0.4)" }} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <p style={{ fontSize: "12px", color: "rgba(26,10,46,0.4)", lineHeight: 1.5 }}>
+                  Share this password with the user. They will use this as their new Contact Number to log in.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

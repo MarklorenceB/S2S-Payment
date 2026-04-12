@@ -202,6 +202,7 @@ export default function SignupPage() {
                   value={form.accountNumber}
                   onChange={(e) => updateField("accountNumber", e.target.value)}
                   icon={<Hash style={{ width: "20px", height: "20px" }} />}
+                  maxLength={50}
                   required
                 />
 
@@ -211,6 +212,7 @@ export default function SignupPage() {
                   value={form.fullName}
                   onChange={(e) => updateField("fullName", e.target.value)}
                   icon={<User style={{ width: "20px", height: "20px" }} />}
+                  maxLength={100}
                   required
                 />
 
@@ -220,6 +222,7 @@ export default function SignupPage() {
                   value={form.contactNumber}
                   onChange={(e) => updateField("contactNumber", e.target.value)}
                   icon={<Phone style={{ width: "20px", height: "20px" }} />}
+                  maxLength={20}
                   required
                 />
 
@@ -230,6 +233,7 @@ export default function SignupPage() {
                   value={form.email}
                   onChange={(e) => updateField("email", e.target.value)}
                   icon={<Mail style={{ width: "20px", height: "20px" }} />}
+                  maxLength={100}
                 />
 
                 {error && (

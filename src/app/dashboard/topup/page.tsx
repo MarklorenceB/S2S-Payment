@@ -59,20 +59,51 @@ export default function TopupPage() {
     init();
   }, []);
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setScreenshot(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setError("Only JPG, PNG, GIF, or WebP images are allowed.");
+      if (fileRef.current) fileRef.current.value = "";
+      return;
     }
+
+    if (file.size > MAX_FILE_SIZE) {
+      setError("Screenshot must be under 5MB.");
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
+
+    setError("");
+    setScreenshot(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setPreview(reader.result as string);
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!screenshot) {
       setError("Please upload a payment screenshot.");
+      return;
+    }
+
+    if (!ALLOWED_TYPES.includes(screenshot.type)) {
+      setError("Only JPG, PNG, GIF, or WebP images are allowed.");
+      return;
+    }
+
+    if (screenshot.size > MAX_FILE_SIZE) {
+      setError("Screenshot must be under 5MB.");
+      return;
+    }
+
+    if (gcashReference.length > 30 || accountNumber.length > 50 || contactNumber.length > 20) {
+      setError("Input exceeds maximum length.");
       return;
     }
 
@@ -279,6 +310,7 @@ export default function TopupPage() {
               value={accountNumber}
               onChange={(e) => setAccountNumber(e.target.value)}
               icon={<Hash style={{ width: "20px", height: "20px" }} />}
+              maxLength={50}
               required
             />
 
@@ -288,6 +320,7 @@ export default function TopupPage() {
               value={contactNumber}
               onChange={(e) => setContactNumber(e.target.value)}
               icon={<Phone style={{ width: "20px", height: "20px" }} />}
+              maxLength={20}
               required
             />
 
@@ -297,6 +330,7 @@ export default function TopupPage() {
               value={gcashReference}
               onChange={(e) => setGcashReference(e.target.value)}
               icon={<Receipt style={{ width: "20px", height: "20px" }} />}
+              maxLength={30}
               required
             />
 
@@ -317,7 +351,7 @@ export default function TopupPage() {
                 ref={fileRef}
                 id="screenshot-upload"
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/gif,image/webp"
                 onChange={handleFileChange}
                 style={{
                   position: "absolute",
@@ -379,7 +413,7 @@ export default function TopupPage() {
                       Tap to upload screenshot
                     </p>
                     <p style={{ fontSize: "11px", color: "rgba(26,10,46,0.3)" }}>
-                      JPG, PNG, or GIF up to 10MB
+                      JPG, PNG, GIF, or WebP up to 5MB
                     </p>
                   </div>
                 )}

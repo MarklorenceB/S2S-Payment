@@ -1,9 +1,19 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { generateSyntheticEmail } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const { success } = rateLimit(`signup:${ip}`, { maxRequests: 5, windowMs: 60_000 });
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many signup attempts. Please wait a minute." },
+        { status: 429 }
+      );
+    }
+
     const { accountNumber, fullName, contactNumber, email } = await request.json();
 
     if (!accountNumber || !fullName || !contactNumber) {
@@ -11,6 +21,17 @@ export async function POST(request: Request) {
         { error: "Account number, full name, and contact number are required." },
         { status: 400 }
       );
+    }
+
+    if (
+      typeof accountNumber !== "string" || typeof fullName !== "string" ||
+      typeof contactNumber !== "string" || (email && typeof email !== "string")
+    ) {
+      return NextResponse.json({ error: "Invalid input." }, { status: 400 });
+    }
+
+    if (accountNumber.length > 50 || fullName.length > 100 || contactNumber.length > 20 || (email && email.length > 100)) {
+      return NextResponse.json({ error: "Input too long." }, { status: 400 });
     }
 
     const supabase = createAdminClient();

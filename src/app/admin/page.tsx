@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Users, Wallet, AlertTriangle, Clock } from "lucide-react";
+import { Users, Wallet, AlertTriangle, Clock, KeyRound, Eye, EyeOff, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 interface Stats {
@@ -25,6 +25,12 @@ export default function AdminOverviewPage() {
     openIssues: 0,
     totalTopups: 0,
   });
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [changingPw, setChangingPw] = useState(false);
+  const [pwMessage, setPwMessage] = useState("");
+  const [pwError, setPwError] = useState("");
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -47,6 +53,46 @@ export default function AdminOverviewPage() {
 
     fetchStats();
   }, []);
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwMessage("");
+    setPwError("");
+
+    if (newPassword.length < 6) {
+      setPwError("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPwError("Passwords do not match.");
+      return;
+    }
+
+    setChangingPw(true);
+    try {
+      const res = await fetch("/api/admin/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newPassword }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setPwError(data.error || "Failed to change password.");
+        return;
+      }
+
+      setPwMessage("Password changed successfully!");
+      setNewPassword("");
+      setConfirmPassword("");
+      setShowPassword(false);
+    } catch {
+      setPwError("Something went wrong.");
+    } finally {
+      setChangingPw(false);
+    }
+  };
 
   const statCards = [
     { label: "Total Users", value: stats.totalUsers, icon: Users },
@@ -137,6 +183,176 @@ export default function AdminOverviewPage() {
             </div>
           );
         })}
+      </div>
+
+      {/* Change Admin Password */}
+      <div
+        style={{
+          marginTop: "24px",
+          background: "#fff",
+          borderRadius: "18px",
+          padding: "20px",
+          border: "1px solid rgba(26,10,46,0.06)",
+          boxShadow: "0 2px 12px rgba(26,10,46,0.06), 0 1px 3px rgba(26,10,46,0.04)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+          <div
+            style={{
+              padding: "10px",
+              borderRadius: "12px",
+              background: "linear-gradient(135deg, #7C3AED, #8B5CF6)",
+              flexShrink: 0,
+            }}
+          >
+            <KeyRound style={{ width: "18px", height: "18px", color: "#fff" }} />
+          </div>
+          <div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "16px",
+                fontWeight: 800,
+                color: "#1A0A2E",
+              }}
+            >
+              Change My Password
+            </h2>
+            <p style={{ fontSize: "12px", color: "rgba(26,10,46,0.4)" }}>
+              Update your admin login password
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleChangePassword} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div style={{ position: "relative" }}>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="New password"
+              value={newPassword}
+              onChange={(e) => { setNewPassword(e.target.value); setPwError(""); setPwMessage(""); }}
+              required
+              minLength={6}
+              style={{
+                width: "100%",
+                padding: "14px 48px 14px 16px",
+                borderRadius: "12px",
+                background: "rgba(26,10,46,0.03)",
+                border: "2px solid rgba(26,10,46,0.08)",
+                color: "#1A0A2E",
+                fontSize: "14px",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = "#7C3AED"; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(26,10,46,0.08)"; }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="cursor-pointer"
+              style={{
+                position: "absolute",
+                right: "12px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                padding: "4px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {showPassword ? (
+                <EyeOff style={{ width: "18px", height: "18px", color: "rgba(26,10,46,0.3)" }} />
+              ) : (
+                <Eye style={{ width: "18px", height: "18px", color: "rgba(26,10,46,0.3)" }} />
+              )}
+            </button>
+          </div>
+
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Confirm new password"
+            value={confirmPassword}
+            onChange={(e) => { setConfirmPassword(e.target.value); setPwError(""); setPwMessage(""); }}
+            required
+            minLength={6}
+            style={{
+              width: "100%",
+              padding: "14px 16px",
+              borderRadius: "12px",
+              background: "rgba(26,10,46,0.03)",
+              border: "2px solid rgba(26,10,46,0.08)",
+              color: "#1A0A2E",
+              fontSize: "14px",
+              outline: "none",
+              boxSizing: "border-box",
+            }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = "#7C3AED"; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(26,10,46,0.08)"; }}
+          />
+
+          {pwError && (
+            <div
+              style={{
+                padding: "10px 14px",
+                borderRadius: "10px",
+                background: "#FEF2F2",
+                color: "#EF4444",
+                fontSize: "13px",
+                fontWeight: 600,
+                border: "1px solid #FECACA",
+              }}
+            >
+              {pwError}
+            </div>
+          )}
+
+          {pwMessage && (
+            <div
+              style={{
+                padding: "10px 14px",
+                borderRadius: "10px",
+                background: "#F0FDF4",
+                color: "#16A34A",
+                fontSize: "13px",
+                fontWeight: 600,
+                border: "1px solid #BBF7D0",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              <Check style={{ width: "16px", height: "16px" }} />
+              {pwMessage}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={changingPw}
+            className="cursor-pointer"
+            style={{
+              width: "100%",
+              padding: "14px 24px",
+              borderRadius: "14px",
+              background: changingPw
+                ? "rgba(139,92,246,0.5)"
+                : "linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%)",
+              color: "#fff",
+              fontSize: "15px",
+              fontWeight: 700,
+              fontFamily: "var(--font-display)",
+              border: "none",
+              cursor: changingPw ? "not-allowed" : "pointer",
+              boxShadow: "0 8px 32px rgba(124,58,237,0.2)",
+            }}
+          >
+            {changingPw ? "Changing..." : "Change Password"}
+          </button>
+        </form>
       </div>
     </div>
   );

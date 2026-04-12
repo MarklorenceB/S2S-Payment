@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { google } from "googleapis";
+import { rateLimit } from "@/lib/rate-limit";
 
 function getAuth() {
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY || "{}";
@@ -27,6 +28,12 @@ function getSheets() {
 }
 
 export async function POST(request: Request) {
+  const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+  const { success } = rateLimit(`sheets:${ip}`, { maxRequests: 10, windowMs: 60_000 });
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+
   const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID || "";
 
   try {
